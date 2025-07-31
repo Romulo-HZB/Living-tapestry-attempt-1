@@ -15,6 +15,10 @@ class NPC:
     tags: Dict[str, List[str]] = field(default_factory=lambda: {"inherent": [], "dynamic": []})
     known_locations: Dict[str, str] = field(default_factory=dict)
     next_available_tick: int = 0
+    attributes: Dict[str, int] = field(
+        default_factory=lambda: {"strength": 10, "dexterity": 10, "constitution": 10}
+    )
+    skills: Dict[str, str] = field(default_factory=dict)
 
 
 @dataclass
@@ -39,6 +43,11 @@ class ItemBlueprint:
     id: str
     name: str
     weight: int = 0
+    damage_dice: str = "1d4"
+    damage_type: str = "bludgeoning"
+    armour_rating: int = 0
+    skill_tag: str = "unarmed_combat"
+    properties: List[str] = field(default_factory=list)
 
 @dataclass
 class ItemInstance:

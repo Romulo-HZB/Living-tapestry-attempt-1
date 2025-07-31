@@ -102,8 +102,3 @@ class WorldState:
             if loc_id and item_id in self.locations_state[loc_id].items:
                 self.locations_state[loc_id].items.remove(item_id)
                 self.npcs[actor_id].inventory.append(item_id)
-        elif event.event_type == "attack":
-            target_id = event.target_ids[0]
-            damage = event.payload.get("damage", 0)
-            if target_id in self.npcs:
-                self.npcs[target_id].hp -= damage
