@@ -1,6 +1,6 @@
 import json
 from pathlib import Path
-from typing import Dict, Optional
+from typing import Dict, Optional, Any
 
 from .data_models import (
     NPC,
@@ -24,6 +24,12 @@ class WorldState:
         self._load_npcs()
         self._load_locations()
         self._load_items()
+        # assign current_location for items based on location state
+        for loc_id, state in self.locations_state.items():
+            for item_id in state.items:
+                inst = self.item_instances.get(item_id)
+                if inst and inst.current_location is None:
+                    inst.current_location = loc_id
 
     def _load_npcs(self):
         npcs_dir = self.data_dir / "npcs"
@@ -102,3 +108,7 @@ class WorldState:
             if loc_id and item_id in self.locations_state[loc_id].items:
                 self.locations_state[loc_id].items.remove(item_id)
                 self.npcs[actor_id].inventory.append(item_id)
+                inst = self.item_instances.get(item_id)
+                if inst:
+                    inst.owner_id = actor_id
+                    inst.current_location = None

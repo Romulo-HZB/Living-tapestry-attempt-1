@@ -23,7 +23,10 @@ This document tracks the implementation status of the engine against the design 
 
 - **Phase 4 – Additional Tools**
   - A basic `attack` tool allows damaging other actors.
-  - A `talk` tool enables simple speech output.
+- A `talk` tool enables simple speech output.
+- Item instances now store `current_location`, `owner_id`, `item_state`,
+  `inventory` and `tags` fields. The `WorldState` assigns locations to items on
+  load and updates ownership when items are grabbed.
 
 ## Outstanding Tasks
 
