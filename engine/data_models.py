@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Any
 
 
 @dataclass
@@ -53,3 +53,8 @@ class ItemBlueprint:
 class ItemInstance:
     id: str
     blueprint_id: str
+    current_location: Optional[str] = None
+    owner_id: Optional[str] = None
+    item_state: Dict[str, Any] = field(default_factory=dict)
+    inventory: List[str] = field(default_factory=list)
+    tags: Dict[str, List[str]] = field(default_factory=lambda: {"inherent": [], "dynamic": []})
