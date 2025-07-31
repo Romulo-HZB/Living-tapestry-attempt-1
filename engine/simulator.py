@@ -6,6 +6,7 @@ from .world_state import WorldState
 from .events import Event
 from .data_models import NPC
 from .tools.base import Tool
+from rpg import combat_rules
 
 
 class Simulator:
@@ -53,11 +54,18 @@ class Simulator:
             bp = self.world.get_item_blueprint(item.blueprint_id)
             print(f"Picked up {bp.name}.")
         elif event.event_type == "attack":
-            self.world.apply_event(event)
             attacker = self.world.get_npc(event.actor_id)
             target = self.world.get_npc(event.target_ids[0])
-            dmg = event.payload.get("damage", 0)
-            print(f"{attacker.name} hits {target.name} for {dmg} damage (HP: {target.hp})")
+            result = combat_rules.resolve_attack(self.world, attacker, target)
+            if result["hit"]:
+                target.hp -= result["damage"]
+                print(
+                    f"{attacker.name} hits {target.name} for {result['damage']} damage (HP: {target.hp})"
+                )
+            else:
+                print(
+                    f"{attacker.name} misses {target.name} (roll {result['to_hit']} vs AC {result['target_ac']})"
+                )
         elif event.event_type == "talk":
             speaker = self.world.get_npc(event.actor_id)
             content = event.payload.get("content", "")

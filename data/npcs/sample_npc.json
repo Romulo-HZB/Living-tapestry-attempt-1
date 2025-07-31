@@ -17,5 +17,13 @@
     "inherent": [],
     "dynamic": []
   },
-  "next_available_tick": 0
+  "next_available_tick": 0,
+  "attributes": {
+    "strength": 12,
+    "dexterity": 11,
+    "constitution": 10
+  },
+  "skills": {
+    "skill_swords": "novice"
+  }
 }
