@@ -36,4 +36,16 @@ class Simulator:
         ready_events = [e for e in self.event_queue if e.tick <= self.game_tick]
         self.event_queue = [e for e in self.event_queue if e.tick > self.game_tick]
         for event in ready_events:
+            self.handle_event(event)
+
+    def handle_event(self, event: Event):
+        if event.event_type == "describe_location":
+            print(event.payload.get("description", ""))
+        elif event.event_type == "move":
+            self.world.apply_event(event)
+            loc_id = event.target_ids[0] if event.target_ids else None
+            if loc_id:
+                loc = self.world.get_location_static(loc_id)
+                print(loc.description)
+        else:
             self.world.apply_event(event)

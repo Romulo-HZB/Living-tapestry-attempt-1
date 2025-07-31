@@ -4,6 +4,7 @@ from pathlib import Path
 from engine.world_state import WorldState
 from engine.simulator import Simulator
 from engine.tools.move import MoveTool
+from engine.tools.look import LookTool
 
 
 def main():
@@ -11,6 +12,7 @@ def main():
     world.load()
     sim = Simulator(world)
     sim.register_tool(MoveTool())
+    sim.register_tool(LookTool())
 
     print("Initial location occupants:")
     for loc_id, loc in world.locations_state.items():
