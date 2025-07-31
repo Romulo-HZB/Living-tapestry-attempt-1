@@ -71,3 +71,34 @@ class Simulator:
                 print(msg)
         else:
             self.world.apply_event(event)
+        # After applying and narrating, record perception for nearby actors
+        self.record_perception(event)
+
+    def record_perception(self, event: Event):
+        """Add a simplified perception entry to actors in the same location."""
+        if event.event_type == "describe_location":
+            return
+
+        if event.event_type == "move":
+            location_id = event.target_ids[0]
+        else:
+            location_id = self.world.find_npc_location(event.actor_id)
+
+        if not location_id:
+            return
+
+        loc_state = self.world.get_location_state(location_id)
+        for npc_id in loc_state.occupants:
+            if npc_id == event.actor_id:
+                continue
+            npc = self.world.get_npc(npc_id)
+            npc.short_term_memory.append(
+                {
+                    "tick": self.game_tick,
+                    "event_type": event.event_type,
+                    "actor_id": event.actor_id,
+                    "payload": event.payload,
+                }
+            )
+            if len(npc.short_term_memory) > 20:
+                npc.short_term_memory.pop(0)
