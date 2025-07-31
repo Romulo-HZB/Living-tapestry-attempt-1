@@ -58,5 +58,13 @@ class Simulator:
             target = self.world.get_npc(event.target_ids[0])
             dmg = event.payload.get("damage", 0)
             print(f"{attacker.name} hits {target.name} for {dmg} damage (HP: {target.hp})")
+        elif event.event_type == "talk":
+            speaker = self.world.get_npc(event.actor_id)
+            content = event.payload.get("content", "")
+            if event.target_ids:
+                target = self.world.get_npc(event.target_ids[0])
+                print(f"{speaker.name} to {target.name}: {content}")
+            else:
+                print(f"{speaker.name} says: {content}")
         else:
             self.world.apply_event(event)
