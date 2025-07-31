@@ -2,10 +2,20 @@
   "id": "npc_sample",
   "name": "Sample NPC",
   "inventory": [],
-  "slots": {"main_hand": null, "off_hand": null, "head": null, "torso": null, "legs": null},
+  "slots": {
+    "main_hand": null,
+    "off_hand": null,
+    "head": null,
+    "torso": null,
+    "legs": null
+  },
   "hp": 10,
   "memories": [],
   "goals": [],
   "relationships": {},
-  "tags": {"inherent": [], "dynamic": []}
+  "tags": {
+    "inherent": [],
+    "dynamic": []
+  },
+  "next_available_tick": 0
 }

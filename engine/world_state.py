@@ -1,6 +1,6 @@
 import json
 from pathlib import Path
-from typing import Dict
+from typing import Dict, Optional
 
 from .data_models import NPC, LocationStatic, LocationState
 
@@ -21,6 +21,8 @@ class WorldState:
         for path in npcs_dir.glob("*.json"):
             with open(path, "r") as f:
                 data = json.load(f)
+            if "next_available_tick" not in data:
+                data["next_available_tick"] = 0
             npc = NPC(**data)
             self.npcs[npc.id] = npc
 
@@ -45,3 +47,18 @@ class WorldState:
 
     def get_location_state(self, loc_id: str) -> LocationState:
         return self.locations_state[loc_id]
+
+    def find_npc_location(self, npc_id: str) -> Optional[str]:
+        for loc_id, loc in self.locations_state.items():
+            if npc_id in loc.occupants:
+                return loc_id
+        return None
+
+    def apply_event(self, event):
+        if event.event_type == "move":
+            actor_id = event.actor_id
+            target = event.target_ids[0]
+            current_loc = self.find_npc_location(actor_id)
+            if current_loc:
+                self.locations_state[current_loc].occupants.remove(actor_id)
+            self.locations_state[target].occupants.append(actor_id)

@@ -9,6 +9,8 @@ def main():
     world.load()
     sample_npc = world.get_npc("npc_sample")
     print(f"Loaded NPC: {sample_npc.name}")
+    for loc_id, loc in world.locations_state.items():
+        print(loc_id, loc.occupants)
 
 
 if __name__ == "__main__":

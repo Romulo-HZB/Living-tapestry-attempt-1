@@ -1,0 +1,6 @@
+{
+  "id": "market_square",
+  "description": "A bustling market filled with vendors and shoppers.",
+  "tags": {"inherent": []},
+  "hex_connections": {"west": "town_square"}
+}

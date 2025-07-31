@@ -1,6 +1,10 @@
 {
   "id": "town_square",
   "description": "A simple town square with a fountain in the middle.",
-  "tags": {"inherent": []},
-  "hex_connections": {}
+  "tags": {
+    "inherent": []
+  },
+  "hex_connections": {
+    "east": "market_square"
+  }
 }
