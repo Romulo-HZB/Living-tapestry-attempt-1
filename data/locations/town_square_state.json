@@ -1,0 +1,8 @@
+{
+  "id": "town_square",
+  "occupants": ["npc_sample"],
+  "items": [],
+  "sublocations": [],
+  "transient_effects": [],
+  "connections_state": {}
+}
