@@ -1,6 +1,6 @@
 {
   "id": "town_square",
-  "occupants": ["npc_sample"],
+  "occupants": ["npc_sample", "npc_enemy"],
   "items": [],
   "sublocations": [],
   "transient_effects": [],

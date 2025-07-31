@@ -1,0 +1,21 @@
+{
+  "id": "npc_enemy",
+  "name": "Angry Peasant",
+  "inventory": [],
+  "slots": {
+    "main_hand": null,
+    "off_hand": null,
+    "head": null,
+    "torso": null,
+    "legs": null
+  },
+  "hp": 5,
+  "memories": [],
+  "goals": [],
+  "relationships": {},
+  "tags": {
+    "inherent": [],
+    "dynamic": []
+  },
+  "next_available_tick": 0
+}
