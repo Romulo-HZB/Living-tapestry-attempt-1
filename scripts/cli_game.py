@@ -13,13 +13,14 @@ from engine.tools.move import MoveTool
 from engine.tools.look import LookTool
 from engine.tools.grab import GrabTool
 from engine.tools.attack import AttackTool
+from engine.tools.talk import TalkTool
 from engine.llm_client import LLMClient
 
 
 SYSTEM_PROMPT = (
     "You are a command parser for a text game. "
     "Return a JSON object describing the player's intended action. "
-    "Available tools: look, move(target_location), grab(item_id), attack(target_id)."
+    "Available tools: look, move(target_location), grab(item_id), attack(target_id), talk(content, target_id)."
 )
 
 
@@ -36,13 +37,14 @@ def main():
     sim.register_tool(LookTool())
     sim.register_tool(GrabTool())
     sim.register_tool(AttackTool())
+    sim.register_tool(TalkTool())
 
     actor_id = "npc_sample"  # temporary player actor
     if args.llm:
         llm = LLMClient(Path("config/llm.json"))
         print("Type text commands. Say 'quit' to exit.")
     else:
-        print("Type 'look', 'move <loc>', 'grab <item>', 'attack <npc>' or 'quit'.")
+        print("Type 'look', 'move <loc>', 'grab <item>', 'attack <npc>', 'talk <msg>' or 'talk <target> <msg>' or 'quit'.")
 
     while True:
         cmd = input("-> ").strip()
@@ -68,6 +70,25 @@ def main():
             elif cmd.startswith("attack "):
                 target = cmd.split(" ", 1)[1]
                 command = {"tool": "attack", "params": {"target_id": target}}
+            elif cmd.startswith("talk "):
+                parts = cmd.split(" ", 2)
+                if len(parts) == 2:
+                    content = parts[1]
+                    command = {"tool": "talk", "params": {"content": content}}
+                elif len(parts) == 3:
+                    if parts[1] in world.npcs:
+                        target = parts[1]
+                        content = parts[2]
+                        command = {
+                            "tool": "talk",
+                            "params": {"target_id": target, "content": content},
+                        }
+                    else:
+                        content = f"{parts[1]} {parts[2]}"
+                        command = {"tool": "talk", "params": {"content": content}}
+                else:
+                    print("Unknown command")
+                    continue
             else:
                 print("Unknown command")
                 continue

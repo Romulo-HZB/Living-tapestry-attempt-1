@@ -17,10 +17,17 @@ This document tracks the implementation status of the engine against the design 
     beginnings of the Action‑Time system.
   - `scripts/cli_game.py` implements an interactive command loop.
 
+- **Phase 3 – LLM Command Parser**
+  - `engine/llm_client.py` connects to an OpenAI-compatible endpoint.
+  - `scripts/cli_game.py` can use the LLM to parse free text when `--llm` is supplied.
+
+- **Phase 4 – Additional Tools**
+  - A basic `attack` tool allows damaging other actors.
+  - A `talk` tool enables simple speech output.
+
 ## Outstanding Tasks
 
-- Integrate an LLM command parser (Phase 3). A basic `LLMClient` stub and optional
-  LLM mode for the CLI game are next.
+- Flesh out deterministic combat resolution beyond fixed damage.
 - Add more tools (attack, talk, etc.) and deterministic combat handling (Phase 4).
 - Implement NPC AI with memory and conversation systems (Phase 5).
 - Build polish features such as the narrator, fallback system and tag rules.
