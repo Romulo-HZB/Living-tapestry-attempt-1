@@ -15,11 +15,12 @@ This document tracks the implementation status of the engine against the design 
   - `scripts/demo_simulator.py` demonstrates moving an actor and picking up an item.
   - Actors have `next_available_tick` and tools have `time_cost`, providing the
     beginnings of the Action‑Time system.
+  - `scripts/cli_game.py` implements an interactive command loop.
 
 ## Outstanding Tasks
 
-- Create an interactive command loop so the user can play by typing commands.
-- Integrate an LLM command parser (Phase 3).
+- Integrate an LLM command parser (Phase 3). A basic `LLMClient` stub and optional
+  LLM mode for the CLI game are next.
 - Add more tools (attack, talk, etc.) and deterministic combat handling (Phase 4).
 - Implement NPC AI with memory and conversation systems (Phase 5).
 - Build polish features such as the narrator, fallback system and tag rules.

@@ -1,5 +1,8 @@
-import sys, os
+import sys
+import os
 from pathlib import Path
+import argparse
+
 
 # Allow running from repository root
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
@@ -10,9 +13,21 @@ from engine.tools.move import MoveTool
 from engine.tools.look import LookTool
 from engine.tools.grab import GrabTool
 from engine.tools.attack import AttackTool
+from engine.llm_client import LLMClient
+
+
+SYSTEM_PROMPT = (
+    "You are a command parser for a text game. "
+    "Return a JSON object describing the player's intended action. "
+    "Available tools: look, move(target_location), grab(item_id), attack(target_id)."
+)
 
 
 def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--llm", action="store_true", help="Use LLM to parse commands")
+    args = parser.parse_args()
+
     world = WorldState(Path("data"))
     world.load()
 
@@ -23,27 +38,39 @@ def main():
     sim.register_tool(AttackTool())
 
     actor_id = "npc_sample"  # temporary player actor
-    print("Type 'look', 'move <location_id>', 'grab <item_id>', 'attack <npc_id>' or 'quit'.")
+    if args.llm:
+        llm = LLMClient(Path("config/llm.json"))
+        print("Type text commands. Say 'quit' to exit.")
+    else:
+        print("Type 'look', 'move <loc>', 'grab <item>', 'attack <npc>' or 'quit'.")
+
     while True:
         cmd = input("-> ").strip()
         if not cmd:
             continue
         if cmd in {"quit", "exit"}:
             break
-        if cmd == "look":
-            command = {"tool": "look", "params": {}}
-        elif cmd.startswith("move "):
-            target = cmd.split(" ", 1)[1]
-            command = {"tool": "move", "params": {"target_location": target}}
-        elif cmd.startswith("grab "):
-            item = cmd.split(" ", 1)[1]
-            command = {"tool": "grab", "params": {"item_id": item}}
-        elif cmd.startswith("attack "):
-            target = cmd.split(" ", 1)[1]
-            command = {"tool": "attack", "params": {"target_id": target}}
+
+        if args.llm:
+            command = llm.parse_command(cmd, SYSTEM_PROMPT)
+            if not command:
+                print("Failed to parse command")
+                continue
         else:
-            print("Unknown command")
-            continue
+            if cmd == "look":
+                command = {"tool": "look", "params": {}}
+            elif cmd.startswith("move "):
+                target = cmd.split(" ", 1)[1]
+                command = {"tool": "move", "params": {"target_location": target}}
+            elif cmd.startswith("grab "):
+                item = cmd.split(" ", 1)[1]
+                command = {"tool": "grab", "params": {"item_id": item}}
+            elif cmd.startswith("attack "):
+                target = cmd.split(" ", 1)[1]
+                command = {"tool": "attack", "params": {"target_id": target}}
+            else:
+                print("Unknown command")
+                continue
         try:
             sim.process_command(actor_id, command)
         except ValueError as e:
