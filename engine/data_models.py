@@ -14,6 +14,7 @@ class NPC:
     relationships: Dict[str, str] = field(default_factory=dict)
     tags: Dict[str, List[str]] = field(default_factory=lambda: {"inherent": [], "dynamic": []})
     known_locations: Dict[str, str] = field(default_factory=dict)
+    next_available_tick: int = 0
 
 
 @dataclass
