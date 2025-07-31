@@ -33,3 +33,14 @@ class LocationState:
     sublocations: List[str] = field(default_factory=list)
     transient_effects: List[str] = field(default_factory=list)
     connections_state: Dict[str, dict] = field(default_factory=dict)
+
+@dataclass
+class ItemBlueprint:
+    id: str
+    name: str
+    weight: int = 0
+
+@dataclass
+class ItemInstance:
+    id: str
+    blueprint_id: str

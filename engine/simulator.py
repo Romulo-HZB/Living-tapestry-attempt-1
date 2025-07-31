@@ -47,5 +47,10 @@ class Simulator:
             if loc_id:
                 loc = self.world.get_location_static(loc_id)
                 print(loc.description)
+        elif event.event_type == "grab":
+            self.world.apply_event(event)
+            item = self.world.get_item_instance(event.target_ids[0])
+            bp = self.world.get_item_blueprint(item.blueprint_id)
+            print(f"Picked up {bp.name}.")
         else:
             self.world.apply_event(event)
