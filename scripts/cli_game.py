@@ -9,6 +9,7 @@ from engine.simulator import Simulator
 from engine.tools.move import MoveTool
 from engine.tools.look import LookTool
 from engine.tools.grab import GrabTool
+from engine.tools.attack import AttackTool
 
 
 def main():
@@ -19,9 +20,10 @@ def main():
     sim.register_tool(MoveTool())
     sim.register_tool(LookTool())
     sim.register_tool(GrabTool())
+    sim.register_tool(AttackTool())
 
     actor_id = "npc_sample"  # temporary player actor
-    print("Type 'look', 'move <location_id>', 'grab <item_id>' or 'quit'.")
+    print("Type 'look', 'move <location_id>', 'grab <item_id>', 'attack <npc_id>' or 'quit'.")
     while True:
         cmd = input("-> ").strip()
         if not cmd:
@@ -36,6 +38,9 @@ def main():
         elif cmd.startswith("grab "):
             item = cmd.split(" ", 1)[1]
             command = {"tool": "grab", "params": {"item_id": item}}
+        elif cmd.startswith("attack "):
+            target = cmd.split(" ", 1)[1]
+            command = {"tool": "attack", "params": {"target_id": target}}
         else:
             print("Unknown command")
             continue

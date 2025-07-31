@@ -52,5 +52,11 @@ class Simulator:
             item = self.world.get_item_instance(event.target_ids[0])
             bp = self.world.get_item_blueprint(item.blueprint_id)
             print(f"Picked up {bp.name}.")
+        elif event.event_type == "attack":
+            self.world.apply_event(event)
+            attacker = self.world.get_npc(event.actor_id)
+            target = self.world.get_npc(event.target_ids[0])
+            dmg = event.payload.get("damage", 0)
+            print(f"{attacker.name} hits {target.name} for {dmg} damage (HP: {target.hp})")
         else:
             self.world.apply_event(event)
