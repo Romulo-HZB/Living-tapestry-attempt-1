@@ -27,11 +27,14 @@ This document tracks the implementation status of the engine against the design 
 - Item instances now store `current_location`, `owner_id`, `item_state`,
   `inventory` and `tags` fields. The `WorldState` assigns locations to items on
   load and updates ownership when items are grabbed.
+- NPCs now record simple perception events in `short_term_memory` whenever
+  actions occur in their location.
+- `cli_game.py` has a `mem` command to inspect the player's recent memories.
 
 ## Outstanding Tasks
 
 - Flesh out deterministic combat resolution beyond fixed damage.
-- Add more tools (attack, talk, etc.) and deterministic combat handling (Phase 4).
+- Expand the toolset and improve combat handling (Phase 4).
 - Implement NPC AI with memory and conversation systems (Phase 5).
 - Build polish features such as the narrator, fallback system and tag rules.
 

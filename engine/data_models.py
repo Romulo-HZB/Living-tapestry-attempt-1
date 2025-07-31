@@ -13,6 +13,7 @@ class NPC:
     goals: List[dict] = field(default_factory=list)
     relationships: Dict[str, str] = field(default_factory=dict)
     tags: Dict[str, List[str]] = field(default_factory=lambda: {"inherent": [], "dynamic": []})
+    short_term_memory: List[dict] = field(default_factory=list)
     known_locations: Dict[str, str] = field(default_factory=dict)
     next_available_tick: int = 0
     attributes: Dict[str, int] = field(

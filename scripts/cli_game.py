@@ -46,7 +46,7 @@ def main():
         llm = LLMClient(Path("config/llm.json"))
         print("Type text commands. Say 'quit' to exit.")
     else:
-        print("Type 'look', 'move <loc>', 'grab <item>', 'attack <npc>', 'talk <msg>' or 'talk <target> <msg>' or 'quit'.")
+        print("Type 'look', 'move <loc>', 'grab <item>', 'attack <npc>', 'talk <msg>' or 'talk <target> <msg>', 'mem' to review memories, or 'quit'.")
 
     while True:
         cmd = input("-> ").strip()
@@ -91,6 +91,11 @@ def main():
                 else:
                     print("Unknown command")
                     continue
+            elif cmd == "mem":
+                npc = world.get_npc(actor_id)
+                for mem in npc.short_term_memory:
+                    print(mem)
+                continue
             else:
                 print("Unknown command")
                 continue
