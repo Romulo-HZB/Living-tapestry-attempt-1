@@ -1,20 +1,22 @@
 from __future__ import annotations
 
-from typing import Dict, Any, List
+from typing import Dict, Any, List, Optional
 
 from .world_state import WorldState
 from .events import Event
 from .data_models import NPC
 from .tools.base import Tool
+from .narrator import Narrator
 from rpg import combat_rules
 
 
 class Simulator:
-    def __init__(self, world: WorldState):
+    def __init__(self, world: WorldState, narrator: Optional[Narrator] = None):
         self.world = world
         self.game_tick = 0
         self.event_queue: List[Event] = []
         self.tools: Dict[str, Tool] = {}
+        self.narrator = narrator or Narrator(world)
 
     def register_tool(self, tool: Tool):
         self.tools[tool.name] = tool
@@ -41,38 +43,31 @@ class Simulator:
 
     def handle_event(self, event: Event):
         if event.event_type == "describe_location":
-            print(event.payload.get("description", ""))
+            msg = self.narrator.render(event)
+            if msg:
+                print(msg)
         elif event.event_type == "move":
             self.world.apply_event(event)
-            loc_id = event.target_ids[0] if event.target_ids else None
-            if loc_id:
-                loc = self.world.get_location_static(loc_id)
-                print(loc.description)
+            msg = self.narrator.render(event)
+            if msg:
+                print(msg)
         elif event.event_type == "grab":
             self.world.apply_event(event)
-            item = self.world.get_item_instance(event.target_ids[0])
-            bp = self.world.get_item_blueprint(item.blueprint_id)
-            print(f"Picked up {bp.name}.")
+            msg = self.narrator.render(event)
+            if msg:
+                print(msg)
         elif event.event_type == "attack":
             attacker = self.world.get_npc(event.actor_id)
             target = self.world.get_npc(event.target_ids[0])
             result = combat_rules.resolve_attack(self.world, attacker, target)
             if result["hit"]:
                 target.hp -= result["damage"]
-                print(
-                    f"{attacker.name} hits {target.name} for {result['damage']} damage (HP: {target.hp})"
-                )
-            else:
-                print(
-                    f"{attacker.name} misses {target.name} (roll {result['to_hit']} vs AC {result['target_ac']})"
-                )
+            msg = self.narrator.render(event, result)
+            if msg:
+                print(msg)
         elif event.event_type == "talk":
-            speaker = self.world.get_npc(event.actor_id)
-            content = event.payload.get("content", "")
-            if event.target_ids:
-                target = self.world.get_npc(event.target_ids[0])
-                print(f"{speaker.name} to {target.name}: {content}")
-            else:
-                print(f"{speaker.name} says: {content}")
+            msg = self.narrator.render(event)
+            if msg:
+                print(msg)
         else:
             self.world.apply_event(event)

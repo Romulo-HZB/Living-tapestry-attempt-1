@@ -3,6 +3,7 @@ from pathlib import Path
 
 from engine.world_state import WorldState
 from engine.simulator import Simulator
+from engine.narrator import Narrator
 from engine.tools.move import MoveTool
 from engine.tools.look import LookTool
 from engine.tools.grab import GrabTool
@@ -11,7 +12,8 @@ from engine.tools.grab import GrabTool
 def main():
     world = WorldState(Path("data"))
     world.load()
-    sim = Simulator(world)
+    narrator = Narrator(world)
+    sim = Simulator(world, narrator=narrator)
     sim.register_tool(MoveTool())
     sim.register_tool(LookTool())
     sim.register_tool(GrabTool())
