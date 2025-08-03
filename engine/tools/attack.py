@@ -21,7 +21,7 @@ class AttackTool(Tool):
     def generate_events(self, intent: Dict[str, Any], world: WorldState, actor: NPC, tick: int) -> List[Event]:
         return [
             Event(
-                event_type="attack",
+                event_type="attack_attempt",
                 tick=tick,
                 actor_id=actor.id,
                 target_ids=[intent["target_id"]],

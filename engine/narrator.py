@@ -25,18 +25,30 @@ class Narrator:
             item = self.world.get_item_instance(event.target_ids[0])
             bp = self.world.get_item_blueprint(item.blueprint_id)
             return f"{actor.name} picks up {bp.name}."
-        elif event.event_type == "attack" and extra is not None:
+        elif event.event_type == "attack_attempt":
             attacker = self.world.get_npc(event.actor_id)
             target = self.world.get_npc(event.target_ids[0])
-            if extra.get("hit"):
-                return (
-                    f"{attacker.name} hits {target.name} for {extra['damage']} "
-                    f"damage (HP: {target.hp})"
-                )
+            weapon = combat_rules.get_weapon(self.world, attacker)
+            return f"{attacker.name} attacks {target.name} with {weapon.name}."
+        elif event.event_type == "attack_hit":
+            attacker = self.world.get_npc(event.actor_id)
+            target = self.world.get_npc(event.target_ids[0])
+            return (
+                f"{attacker.name} hits {target.name} "
+                f"(roll {event.payload['to_hit']} vs AC {event.payload['target_ac']})"
+            )
+        elif event.event_type == "attack_missed":
+            attacker = self.world.get_npc(event.actor_id)
+            target = self.world.get_npc(event.target_ids[0])
             return (
                 f"{attacker.name} misses {target.name} "
-                f"(roll {extra['to_hit']} vs AC {extra['target_ac']})"
+                f"(roll {event.payload['to_hit']} vs AC {event.payload['target_ac']})"
             )
+        elif event.event_type == "damage_applied":
+            target = self.world.get_npc(event.target_ids[0])
+            amount = event.payload.get("amount", 0)
+            dmg_type = event.payload.get("damage_type", "")
+            return f"{target.name} takes {amount} {dmg_type} damage (HP: {target.hp})"
         elif event.event_type == "talk":
             speaker = self.world.get_npc(event.actor_id)
             content = event.payload.get("content", "")
