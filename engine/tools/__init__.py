@@ -3,6 +3,7 @@ from .look import LookTool
 from .grab import GrabTool
 from .attack import AttackTool
 from .talk import TalkTool
+from .inventory import InventoryTool
 
 __all__ = [
     "MoveTool",
@@ -10,4 +11,5 @@ __all__ = [
     "GrabTool",
     "AttackTool",
     "TalkTool",
+    "InventoryTool",
 ]

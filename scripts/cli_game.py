@@ -15,13 +15,14 @@ from engine.tools.look import LookTool
 from engine.tools.grab import GrabTool
 from engine.tools.attack import AttackTool
 from engine.tools.talk import TalkTool
+from engine.tools.inventory import InventoryTool
 from engine.llm_client import LLMClient
 
 
 SYSTEM_PROMPT = (
     "You are a command parser for a text game. "
     "Return a JSON object describing the player's intended action. "
-    "Available tools: look, move(target_location), grab(item_id), attack(target_id), talk(content, target_id)."
+    "Available tools: look, move(target_location), grab(item_id), attack(target_id), talk(content, target_id), inventory()."
 )
 
 
@@ -40,13 +41,14 @@ def main():
     sim.register_tool(GrabTool())
     sim.register_tool(AttackTool())
     sim.register_tool(TalkTool())
+    sim.register_tool(InventoryTool())
 
     actor_id = "npc_sample"  # temporary player actor
     if args.llm:
         llm = LLMClient(Path("config/llm.json"))
         print("Type text commands. Say 'quit' to exit.")
     else:
-        print("Type 'look', 'move <loc>', 'grab <item>', 'attack <npc>', 'talk <msg>' or 'talk <target> <msg>', 'mem' to review memories, or 'quit'.")
+        print("Type 'look', 'move <loc>', 'grab <item>', 'attack <npc>', 'talk <msg>' or 'talk <target> <msg>', 'inventory', 'mem' to review memories, or 'quit'.")
 
     while True:
         cmd = input("-> ").strip()
@@ -91,6 +93,8 @@ def main():
                 else:
                     print("Unknown command")
                     continue
+            elif cmd in {"inventory", "inv"}:
+                command = {"tool": "inventory", "params": {}}
             elif cmd == "mem":
                 npc = world.get_npc(actor_id)
                 for mem in npc.short_term_memory:
