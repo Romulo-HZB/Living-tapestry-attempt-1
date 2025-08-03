@@ -15,7 +15,15 @@ class Narrator:
 
     def render(self, event: Event, extra: Optional[Dict[str, Any]] = None) -> str:
         if event.event_type == "describe_location":
-            return event.payload.get("description", "")
+            description = event.payload.get("description", "")
+            occupants = event.payload.get("occupants", [])
+            items = event.payload.get("items", [])
+            parts = [description]
+            if occupants:
+                parts.append("You see: " + ", ".join(occupants))
+            if items:
+                parts.append("Items here: " + ", ".join(items))
+            return " ".join(parts).strip()
         elif event.event_type == "move":
             actor = self.world.get_npc(event.actor_id)
             loc = self.world.get_location_static(event.target_ids[0])
