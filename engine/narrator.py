@@ -100,4 +100,19 @@ class Narrator:
             bp = self.world.get_item_blueprint(item.blueprint_id)
             slot = event.payload.get("slot", "")
             return f"{actor.name} removes {bp.name} from {slot}."
+        elif event.event_type == "analyze":
+            name = event.payload.get("name", "")
+            weight = event.payload.get("weight")
+            damage = event.payload.get("damage_dice")
+            dmg_type = event.payload.get("damage_type")
+            armour = event.payload.get("armour_rating")
+            props = event.payload.get("properties", [])
+            parts = [f"{name} (weight {weight})"]
+            if damage:
+                parts.append(f"Damage: {damage} {dmg_type}")
+            if armour:
+                parts.append(f"Armour rating: {armour}")
+            if props:
+                parts.append("Properties: " + ", ".join(props))
+            return " ".join(parts)
         return ""

@@ -36,6 +36,7 @@ This document tracks the implementation status of the engine against the design 
 - A `stats` tool reports an actor's hit points, attributes and skills.
 - `equip` and `unequip` tools let actors manage equipment slots.
 - `look` now reports visible items and other actors in the location.
+- An `analyze` tool reports item details.
 
 ## Outstanding Tasks
 
