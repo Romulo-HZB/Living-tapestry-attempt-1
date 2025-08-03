@@ -122,6 +122,10 @@ class Simulator:
             msg = self.narrator.render(event)
             if msg:
                 print(msg)
+        elif event.event_type == "scream":
+            msg = self.narrator.render(event)
+            if msg:
+                print(msg)
         elif event.event_type == "inventory":
             msg = self.narrator.render(event)
             if msg:
@@ -162,10 +166,20 @@ class Simulator:
         if not location_id:
             return
 
+        recipients = set()
         loc_state = self.world.get_location_state(location_id)
         for npc_id in loc_state.occupants:
-            if npc_id == event.actor_id:
-                continue
+            if npc_id != event.actor_id:
+                recipients.add(npc_id)
+
+        if event.event_type == "scream":
+            loc_static = self.world.get_location_static(location_id)
+            for neighbor_id in loc_static.hex_connections.values():
+                neighbor_state = self.world.get_location_state(neighbor_id)
+                for npc_id in neighbor_state.occupants:
+                    recipients.add(npc_id)
+
+        for npc_id in recipients:
             npc = self.world.get_npc(npc_id)
             npc.short_term_memory.append(
                 {

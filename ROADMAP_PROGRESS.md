@@ -37,6 +37,7 @@ This document tracks the implementation status of the engine against the design 
 - `equip` and `unequip` tools let actors manage equipment slots.
 - `look` now reports visible items and other actors in the location.
 - An `analyze` tool reports item details.
+- A `scream` tool lets actors broadcast messages; nearby NPCs record the event in their memories.
 
 ## Outstanding Tasks
 
