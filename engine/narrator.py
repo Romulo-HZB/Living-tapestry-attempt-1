@@ -25,6 +25,11 @@ class Narrator:
             item = self.world.get_item_instance(event.target_ids[0])
             bp = self.world.get_item_blueprint(item.blueprint_id)
             return f"{actor.name} picks up {bp.name}."
+        elif event.event_type == "drop":
+            actor = self.world.get_npc(event.actor_id)
+            item = self.world.get_item_instance(event.target_ids[0])
+            bp = self.world.get_item_blueprint(item.blueprint_id)
+            return f"{actor.name} drops {bp.name}."
         elif event.event_type == "attack_attempt":
             attacker = self.world.get_npc(event.actor_id)
             target = self.world.get_npc(event.target_ids[0])
