@@ -112,6 +112,17 @@ class WorldState:
                 if inst:
                     inst.owner_id = actor_id
                     inst.current_location = None
+        elif event.event_type == "drop":
+            actor_id = event.actor_id
+            item_id = event.target_ids[0]
+            loc_id = self.find_npc_location(actor_id)
+            if loc_id and item_id in self.npcs[actor_id].inventory:
+                self.npcs[actor_id].inventory.remove(item_id)
+                self.locations_state[loc_id].items.append(item_id)
+                inst = self.item_instances.get(item_id)
+                if inst:
+                    inst.owner_id = None
+                    inst.current_location = loc_id
         elif event.event_type == "damage_applied":
             target_id = event.target_ids[0]
             amount = event.payload.get("amount", 0)

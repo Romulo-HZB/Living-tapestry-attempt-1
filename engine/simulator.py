@@ -56,6 +56,11 @@ class Simulator:
             msg = self.narrator.render(event)
             if msg:
                 print(msg)
+        elif event.event_type == "drop":
+            self.world.apply_event(event)
+            msg = self.narrator.render(event)
+            if msg:
+                print(msg)
         elif event.event_type == "attack_attempt":
             attacker = self.world.get_npc(event.actor_id)
             target = self.world.get_npc(event.target_ids[0])

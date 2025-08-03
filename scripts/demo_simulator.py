@@ -7,6 +7,7 @@ from engine.narrator import Narrator
 from engine.tools.move import MoveTool
 from engine.tools.look import LookTool
 from engine.tools.grab import GrabTool
+from engine.tools.drop import DropTool
 
 
 def main():
@@ -17,6 +18,7 @@ def main():
     sim.register_tool(MoveTool())
     sim.register_tool(LookTool())
     sim.register_tool(GrabTool())
+    sim.register_tool(DropTool())
 
     print("Initial location occupants:")
     for loc_id, loc in world.locations_state.items():
@@ -31,11 +33,16 @@ def main():
     sim.process_command("npc_sample", grab_cmd)
     sim.tick()
 
+    drop_cmd = {"tool": "drop", "params": {"item_id": "item_rusty_sword_1"}}
+    sim.process_command("npc_sample", drop_cmd)
+    sim.tick()
+
     print("After move:")
     for loc_id, loc in world.locations_state.items():
         print(loc_id, loc.occupants)
 
-    print("Inventory after grab:", world.get_npc("npc_sample").inventory)
+    print("Inventory after drop:", world.get_npc("npc_sample").inventory)
+    print("Location items after drop:", world.get_location_state("market_square").items)
 
 
 if __name__ == "__main__":

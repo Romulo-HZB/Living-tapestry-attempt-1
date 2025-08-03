@@ -32,6 +32,7 @@ This document tracks the implementation status of the engine against the design 
 - `cli_game.py` has a `mem` command to inspect the player's recent memories.
 - Combat resolution now follows the ATTACK_ATTEMPT -> ATTACK_HIT/MISSED ->
   DAMAGE_APPLIED event chain with deterministic rules in `rpg/combat_rules.py`.
+- A `drop` tool lets actors place carried items in their current location.
 
 ## Outstanding Tasks
 
