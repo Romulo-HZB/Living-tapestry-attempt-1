@@ -130,4 +130,10 @@ class Narrator:
             if props:
                 parts.append("Properties: " + ", ".join(props))
             return " ".join(parts)
+        elif event.event_type == "give":
+            actor = self.world.get_npc(event.actor_id)
+            item = self.world.get_item_instance(event.target_ids[0])
+            target = self.world.get_npc(event.target_ids[1])
+            bp = self.world.get_item_blueprint(item.blueprint_id)
+            return f"{actor.name} gives {bp.name} to {target.name}."
         return ""
