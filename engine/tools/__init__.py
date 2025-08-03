@@ -11,6 +11,7 @@ from .stats import StatsTool
 from .equip import EquipTool
 from .unequip import UnequipTool
 from .analyze import AnalyzeTool
+from .eat import EatTool
 
 __all__ = [
     "MoveTool",
@@ -26,4 +27,5 @@ __all__ = [
     "EquipTool",
     "UnequipTool",
     "AnalyzeTool",
+    "EatTool",
 ]

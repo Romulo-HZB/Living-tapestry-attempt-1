@@ -25,5 +25,7 @@
   },
   "skills": {
     "unarmed_combat": "novice"
-  }
+  },
+  "last_meal_tick": 0,
+  "hunger_stage": "sated"
 }

@@ -23,6 +23,7 @@ from engine.tools.stats import StatsTool
 from engine.tools.equip import EquipTool
 from engine.tools.unequip import UnequipTool
 from engine.tools.analyze import AnalyzeTool
+from engine.tools.eat import EatTool
 from engine.llm_client import LLMClient
 
 
@@ -30,7 +31,7 @@ SYSTEM_PROMPT = (
     "You are a command parser for a text game. "
     "Return a JSON object describing the player's intended action. "
     "Available tools: look, move(target_location), grab(item_id), drop(item_id), attack(target_id), "
-    "talk(content, target_id), talk_loud(content), scream(content), inventory(), stats(), equip(item_id, slot), unequip(slot), analyze(item_id)."
+    "talk(content, target_id), talk_loud(content), scream(content), inventory(), stats(), equip(item_id, slot), unequip(slot), analyze(item_id), eat(item_id)."
 )
 
 
@@ -57,13 +58,14 @@ def main():
     sim.register_tool(EquipTool())
     sim.register_tool(UnequipTool())
     sim.register_tool(AnalyzeTool())
+    sim.register_tool(EatTool())
 
     actor_id = "npc_sample"  # temporary player actor
     if args.llm:
         llm = LLMClient(Path("config/llm.json"))
         print("Type text commands. Say 'quit' to exit.")
     else:
-        print("Type 'look', 'move <loc>', 'grab <item>', 'drop <item>', 'attack <npc>', 'talk <msg>' or 'talk <target> <msg>', 'shout <msg>', 'scream <msg>', 'inventory', 'stats', 'equip <item> <slot>', 'unequip <slot>', 'analyze <item>', 'mem' to review memories, or 'quit'.")
+        print("Type 'look', 'move <loc>', 'grab <item>', 'drop <item>', 'attack <npc>', 'talk <msg>' or 'talk <target> <msg>', 'shout <msg>', 'scream <msg>', 'inventory', 'stats', 'equip <item> <slot>', 'unequip <slot>', 'analyze <item>', 'eat <item>', 'mem' to review memories, or 'quit'.")
 
     while True:
         cmd = input("-> ").strip()
@@ -124,6 +126,9 @@ def main():
             elif cmd.startswith("analyze "):
                 item = cmd.split(" ", 1)[1]
                 command = {"tool": "analyze", "params": {"item_id": item}}
+            elif cmd.startswith("eat "):
+                item = cmd.split(" ", 1)[1]
+                command = {"tool": "eat", "params": {"item_id": item}}
             elif cmd.startswith("equip "):
                 parts = cmd.split()
                 if len(parts) == 3:

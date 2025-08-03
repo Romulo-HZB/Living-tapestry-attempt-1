@@ -16,6 +16,8 @@ class NPC:
     short_term_memory: List[dict] = field(default_factory=list)
     known_locations: Dict[str, str] = field(default_factory=dict)
     next_available_tick: int = 0
+    last_meal_tick: int = 0
+    hunger_stage: str = "sated"
     attributes: Dict[str, int] = field(
         default_factory=lambda: {"strength": 10, "dexterity": 10, "constitution": 10}
     )

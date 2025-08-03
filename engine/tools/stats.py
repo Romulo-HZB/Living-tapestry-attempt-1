@@ -23,6 +23,7 @@ class StatsTool(Tool):
                     "hp": actor.hp,
                     "attributes": actor.attributes,
                     "skills": actor.skills,
+                    "hunger_stage": actor.hunger_stage,
                 },
             )
         ]
