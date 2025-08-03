@@ -3,6 +3,7 @@ from .look import LookTool
 from .grab import GrabTool
 from .attack import AttackTool
 from .talk import TalkTool
+from .scream import ScreamTool
 from .inventory import InventoryTool
 from .drop import DropTool
 from .stats import StatsTool
@@ -16,6 +17,7 @@ __all__ = [
     "GrabTool",
     "AttackTool",
     "TalkTool",
+    "ScreamTool",
     "InventoryTool",
     "DropTool",
     "StatsTool",
