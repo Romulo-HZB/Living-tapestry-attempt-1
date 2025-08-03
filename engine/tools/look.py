@@ -13,14 +13,38 @@ class LookTool(Tool):
     def validate_intent(self, intent: Dict[str, Any], world: WorldState, actor: NPC) -> bool:
         return True
 
-    def generate_events(self, intent: Dict[str, Any], world: WorldState, actor: NPC, tick: int) -> List[Event]:
+    def generate_events(
+        self, intent: Dict[str, Any], world: WorldState, actor: NPC, tick: int
+    ) -> List[Event]:
         loc_id = world.find_npc_location(actor.id)
         if not loc_id:
             return []
-        loc = world.get_location_static(loc_id)
-        return [Event(
-            event_type="describe_location",
-            tick=tick,
-            actor_id=actor.id,
-            payload={"description": loc.description},
-        )]
+
+        loc_static = world.get_location_static(loc_id)
+        loc_state = world.get_location_state(loc_id)
+
+        item_names = []
+        for item_id in loc_state.items:
+            inst = world.get_item_instance(item_id)
+            bp = world.get_item_blueprint(inst.blueprint_id)
+            item_names.append(bp.name)
+
+        occupant_names = []
+        for npc_id in loc_state.occupants:
+            if npc_id == actor.id:
+                continue
+            npc = world.get_npc(npc_id)
+            occupant_names.append(npc.name)
+
+        return [
+            Event(
+                event_type="describe_location",
+                tick=tick,
+                actor_id=actor.id,
+                payload={
+                    "description": loc_static.description,
+                    "items": item_names,
+                    "occupants": occupant_names,
+                },
+            )
+        ]
