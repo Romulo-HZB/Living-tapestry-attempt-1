@@ -5,6 +5,7 @@ from .attack import AttackTool
 from .talk import TalkTool
 from .inventory import InventoryTool
 from .drop import DropTool
+from .stats import StatsTool
 
 __all__ = [
     "MoveTool",
@@ -14,4 +15,5 @@ __all__ = [
     "TalkTool",
     "InventoryTool",
     "DropTool",
+    "StatsTool",
 ]

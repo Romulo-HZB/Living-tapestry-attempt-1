@@ -67,4 +67,17 @@ class Narrator:
             if items:
                 return f"{actor.name} carries: {', '.join(items)}"
             return f"{actor.name} carries nothing."
+        elif event.event_type == "stats":
+            actor = self.world.get_npc(event.actor_id)
+            hp = event.payload.get("hp", 0)
+            attrs = event.payload.get("attributes", {})
+            skills = event.payload.get("skills", {})
+            parts = [f"HP: {hp}"]
+            if attrs:
+                attr_str = ", ".join(f"{k}: {v}" for k, v in attrs.items())
+                parts.append(f"Attributes: {attr_str}")
+            if skills:
+                skill_str = ", ".join(f"{k} ({v})" for k, v in skills.items())
+                parts.append(f"Skills: {skill_str}")
+            return f"{actor.name} stats - " + "; ".join(parts)
         return ""

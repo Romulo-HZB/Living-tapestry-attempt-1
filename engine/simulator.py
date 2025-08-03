@@ -126,6 +126,10 @@ class Simulator:
             msg = self.narrator.render(event)
             if msg:
                 print(msg)
+        elif event.event_type == "stats":
+            msg = self.narrator.render(event)
+            if msg:
+                print(msg)
         else:
             self.world.apply_event(event)
         # After applying and narrating, record perception for nearby actors
