@@ -112,3 +112,9 @@ class WorldState:
                 if inst:
                     inst.owner_id = actor_id
                     inst.current_location = None
+        elif event.event_type == "damage_applied":
+            target_id = event.target_ids[0]
+            amount = event.payload.get("amount", 0)
+            npc = self.npcs.get(target_id)
+            if npc:
+                npc.hp -= amount

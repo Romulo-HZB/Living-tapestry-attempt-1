@@ -30,10 +30,11 @@ This document tracks the implementation status of the engine against the design 
 - NPCs now record simple perception events in `short_term_memory` whenever
   actions occur in their location.
 - `cli_game.py` has a `mem` command to inspect the player's recent memories.
+- Combat resolution now follows the ATTACK_ATTEMPT -> ATTACK_HIT/MISSED ->
+  DAMAGE_APPLIED event chain with deterministic rules in `rpg/combat_rules.py`.
 
 ## Outstanding Tasks
 
-- Flesh out deterministic combat resolution beyond fixed damage.
 - Expand the toolset and improve combat handling (Phase 4).
 - Implement NPC AI with memory and conversation systems (Phase 5).
 - Build polish features such as the narrator, fallback system and tag rules.

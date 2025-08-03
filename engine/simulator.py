@@ -56,13 +56,61 @@ class Simulator:
             msg = self.narrator.render(event)
             if msg:
                 print(msg)
-        elif event.event_type == "attack":
+        elif event.event_type == "attack_attempt":
             attacker = self.world.get_npc(event.actor_id)
             target = self.world.get_npc(event.target_ids[0])
             result = combat_rules.resolve_attack(self.world, attacker, target)
+            payload = {
+                "to_hit": result["to_hit"],
+                "target_ac": result["target_ac"],
+            }
             if result["hit"]:
-                target.hp -= result["damage"]
-            msg = self.narrator.render(event, result)
+                payload["damage"] = result["damage"]
+                self.event_queue.append(
+                    Event(
+                        event_type="attack_hit",
+                        tick=self.game_tick,
+                        actor_id=event.actor_id,
+                        target_ids=event.target_ids,
+                        payload=payload,
+                    )
+                )
+                self.event_queue.append(
+                    Event(
+                        event_type="damage_applied",
+                        tick=self.game_tick,
+                        actor_id=event.actor_id,
+                        target_ids=event.target_ids,
+                        payload={
+                            "amount": result["damage"],
+                            "damage_type": combat_rules.get_weapon(self.world, attacker).damage_type,
+                        },
+                    )
+                )
+            else:
+                self.event_queue.append(
+                    Event(
+                        event_type="attack_missed",
+                        tick=self.game_tick,
+                        actor_id=event.actor_id,
+                        target_ids=event.target_ids,
+                        payload=payload,
+                    )
+                )
+            msg = self.narrator.render(event)
+            if msg:
+                print(msg)
+        elif event.event_type == "attack_hit":
+            msg = self.narrator.render(event)
+            if msg:
+                print(msg)
+        elif event.event_type == "attack_missed":
+            msg = self.narrator.render(event)
+            if msg:
+                print(msg)
+        elif event.event_type == "damage_applied":
+            self.world.apply_event(event)
+            msg = self.narrator.render(event)
             if msg:
                 print(msg)
         elif event.event_type == "talk":
