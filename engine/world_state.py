@@ -173,3 +173,14 @@ class WorldState:
                 item_id = npc.slots[slot]
                 npc.inventory.append(item_id)
                 npc.slots[slot] = None
+        elif event.event_type == "give":
+            actor_id = event.actor_id
+            item_id, target_id = event.target_ids
+            giver = self.npcs.get(actor_id)
+            receiver = self.npcs.get(target_id)
+            if giver and receiver and item_id in giver.inventory:
+                giver.inventory.remove(item_id)
+                receiver.inventory.append(item_id)
+                inst = self.item_instances.get(item_id)
+                if inst:
+                    inst.owner_id = target_id
