@@ -23,21 +23,22 @@ This document tracks the implementation status of the engine against the design 
 
 - **Phase 4 – Additional Tools**
   - A basic `attack` tool allows damaging other actors.
-- A `talk` tool enables simple speech output.
-- Item instances now store `current_location`, `owner_id`, `item_state`,
-  `inventory` and `tags` fields. The `WorldState` assigns locations to items on
-  load and updates ownership when items are grabbed.
-- NPCs now record simple perception events in `short_term_memory` whenever
-  actions occur in their location.
-- `cli_game.py` has a `mem` command to inspect the player's recent memories.
-- Combat resolution now follows the ATTACK_ATTEMPT -> ATTACK_HIT/MISSED ->
-  DAMAGE_APPLIED event chain with deterministic rules in `rpg/combat_rules.py`.
-- A `drop` tool lets actors place carried items in their current location.
-- A `stats` tool reports an actor's hit points, attributes and skills.
-- `equip` and `unequip` tools let actors manage equipment slots.
-- `look` now reports visible items and other actors in the location.
-- An `analyze` tool reports item details.
-- A `scream` tool lets actors broadcast messages; nearby NPCs record the event in their memories.
+  - A `talk` tool enables simple speech output.
+  - A `talk_loud` tool lets actors shout to adjacent locations if passages are open.
+  - Item instances now store `current_location`, `owner_id`, `item_state`,
+    `inventory` and `tags` fields. The `WorldState` assigns locations to items on
+    load and updates ownership when items are grabbed.
+  - NPCs now record simple perception events in `short_term_memory` whenever
+    actions occur in their location.
+  - `cli_game.py` has a `mem` command to inspect the player's recent memories.
+  - Combat resolution now follows the ATTACK_ATTEMPT -> ATTACK_HIT/MISSED ->
+    DAMAGE_APPLIED event chain with deterministic rules in `rpg/combat_rules.py`.
+  - A `drop` tool lets actors place carried items in their current location.
+  - A `stats` tool reports an actor's hit points, attributes and skills.
+  - `equip` and `unequip` tools let actors manage equipment slots.
+  - `look` now reports visible items and other actors in the location.
+  - An `analyze` tool reports item details.
+  - A `scream` tool lets actors broadcast messages; nearby NPCs record the event in their memories.
 
 ## Outstanding Tasks
 

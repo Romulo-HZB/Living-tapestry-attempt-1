@@ -73,6 +73,10 @@ class Narrator:
             speaker = self.world.get_npc(event.actor_id)
             content = event.payload.get("content", "")
             return f"{speaker.name} screams: {content}"
+        elif event.event_type == "talk_loud":
+            speaker = self.world.get_npc(event.actor_id)
+            content = event.payload.get("content", "")
+            return f"{speaker.name} shouts: {content}"
         elif event.event_type == "inventory":
             actor = self.world.get_npc(event.actor_id)
             items = event.payload.get("items", [])
