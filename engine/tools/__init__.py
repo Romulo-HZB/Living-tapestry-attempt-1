@@ -8,6 +8,7 @@ from .drop import DropTool
 from .stats import StatsTool
 from .equip import EquipTool
 from .unequip import UnequipTool
+from .analyze import AnalyzeTool
 
 __all__ = [
     "MoveTool",
@@ -20,4 +21,5 @@ __all__ = [
     "StatsTool",
     "EquipTool",
     "UnequipTool",
+    "AnalyzeTool",
 ]
