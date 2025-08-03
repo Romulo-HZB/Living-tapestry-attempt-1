@@ -36,6 +36,7 @@ class Simulator:
 
     def tick(self):
         self.game_tick += 1
+        self.world.update_hunger(self.game_tick)
         ready_events = [e for e in self.event_queue if e.tick <= self.game_tick]
         self.event_queue = [e for e in self.event_queue if e.tick > self.game_tick]
         for event in ready_events:
@@ -57,6 +58,11 @@ class Simulator:
             if msg:
                 print(msg)
         elif event.event_type == "drop":
+            self.world.apply_event(event)
+            msg = self.narrator.render(event)
+            if msg:
+                print(msg)
+        elif event.event_type == "eat":
             self.world.apply_event(event)
             msg = self.narrator.render(event)
             if msg:

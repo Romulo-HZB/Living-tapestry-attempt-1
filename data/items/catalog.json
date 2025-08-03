@@ -16,5 +16,14 @@
     "skill_tag": "unarmed_combat",
     "armour_rating": 1,
     "properties": []
+  },
+  "apple": {
+    "name": "Apple",
+    "weight": 1,
+    "damage_dice": "1d1",
+    "damage_type": "bludgeoning",
+    "skill_tag": "unarmed_combat",
+    "armour_rating": 0,
+    "properties": ["food"]
   }
 }

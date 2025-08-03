@@ -2,7 +2,8 @@
   "id": "market_square",
   "occupants": [],
   "items": [
-    "item_rusty_sword_1"
+    "item_rusty_sword_1",
+    "item_apple_1"
   ],
   "sublocations": [],
   "transient_effects": [],

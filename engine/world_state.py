@@ -38,6 +38,10 @@ class WorldState:
                 data = json.load(f)
             if "next_available_tick" not in data:
                 data["next_available_tick"] = 0
+            if "last_meal_tick" not in data:
+                data["last_meal_tick"] = 0
+            if "hunger_stage" not in data:
+                data["hunger_stage"] = "sated"
             npc = NPC(**data)
             self.npcs[npc.id] = npc
 
@@ -93,6 +97,18 @@ class WorldState:
                 return loc_id
         return None
 
+    def update_hunger(self, current_tick: int):
+        HUNGRY_THRESHOLD = 20
+        STARVING_THRESHOLD = 40
+        for npc in self.npcs.values():
+            ticks_since = current_tick - npc.last_meal_tick
+            if ticks_since >= STARVING_THRESHOLD:
+                npc.hunger_stage = "starving"
+            elif ticks_since >= HUNGRY_THRESHOLD:
+                npc.hunger_stage = "hungry"
+            else:
+                npc.hunger_stage = "sated"
+
     def apply_event(self, event):
         if event.event_type == "move":
             actor_id = event.actor_id
@@ -123,6 +139,15 @@ class WorldState:
                 if inst:
                     inst.owner_id = None
                     inst.current_location = loc_id
+        elif event.event_type == "eat":
+            actor_id = event.actor_id
+            item_id = event.target_ids[0]
+            npc = self.npcs.get(actor_id)
+            if npc and item_id in npc.inventory:
+                npc.inventory.remove(item_id)
+                self.item_instances.pop(item_id, None)
+                npc.last_meal_tick = event.tick
+                npc.hunger_stage = "sated"
         elif event.event_type == "damage_applied":
             target_id = event.target_ids[0]
             amount = event.payload.get("amount", 0)

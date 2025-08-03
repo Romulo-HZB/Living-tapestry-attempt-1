@@ -39,6 +39,8 @@ This document tracks the implementation status of the engine against the design 
   - `look` now reports visible items and other actors in the location.
   - An `analyze` tool reports item details.
   - A `scream` tool lets actors broadcast messages; nearby NPCs record the event in their memories.
+  - A basic hunger system tracks when actors last ate and updates their hunger stage each tick.
+  - An `eat` tool allows consuming food items to reset hunger.
 
 ## Outstanding Tasks
 

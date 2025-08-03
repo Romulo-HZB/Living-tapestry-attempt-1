@@ -38,6 +38,10 @@ class Narrator:
             item = self.world.get_item_instance(event.target_ids[0])
             bp = self.world.get_item_blueprint(item.blueprint_id)
             return f"{actor.name} drops {bp.name}."
+        elif event.event_type == "eat":
+            actor = self.world.get_npc(event.actor_id)
+            item_name = event.payload.get("item_name", "something")
+            return f"{actor.name} eats {item_name}."
         elif event.event_type == "attack_attempt":
             attacker = self.world.get_npc(event.actor_id)
             target = self.world.get_npc(event.target_ids[0])
@@ -88,6 +92,7 @@ class Narrator:
             hp = event.payload.get("hp", 0)
             attrs = event.payload.get("attributes", {})
             skills = event.payload.get("skills", {})
+            hunger = event.payload.get("hunger_stage")
             parts = [f"HP: {hp}"]
             if attrs:
                 attr_str = ", ".join(f"{k}: {v}" for k, v in attrs.items())
@@ -95,6 +100,8 @@ class Narrator:
             if skills:
                 skill_str = ", ".join(f"{k} ({v})" for k, v in skills.items())
                 parts.append(f"Skills: {skill_str}")
+            if hunger:
+                parts.append(f"Hunger: {hunger}")
             return f"{actor.name} stats - " + "; ".join(parts)
         elif event.event_type == "equip":
             actor = self.world.get_npc(event.actor_id)
