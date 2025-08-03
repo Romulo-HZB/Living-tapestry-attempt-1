@@ -122,6 +122,10 @@ class Simulator:
             msg = self.narrator.render(event)
             if msg:
                 print(msg)
+        elif event.event_type == "talk_loud":
+            msg = self.narrator.render(event)
+            if msg:
+                print(msg)
         elif event.event_type == "scream":
             msg = self.narrator.render(event)
             if msg:
@@ -178,6 +182,15 @@ class Simulator:
                 neighbor_state = self.world.get_location_state(neighbor_id)
                 for npc_id in neighbor_state.occupants:
                     recipients.add(npc_id)
+        elif event.event_type == "talk_loud":
+            loc_static = self.world.get_location_static(location_id)
+            loc_state = self.world.get_location_state(location_id)
+            for neighbor_id in loc_static.hex_connections.values():
+                conn = loc_state.connections_state.get(neighbor_id, {})
+                if conn.get("status", "open") == "open":
+                    neighbor_state = self.world.get_location_state(neighbor_id)
+                    for npc_id in neighbor_state.occupants:
+                        recipients.add(npc_id)
 
         for npc_id in recipients:
             npc = self.world.get_npc(npc_id)
