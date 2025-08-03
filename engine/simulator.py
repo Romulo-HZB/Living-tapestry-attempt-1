@@ -130,6 +130,16 @@ class Simulator:
             msg = self.narrator.render(event)
             if msg:
                 print(msg)
+        elif event.event_type == "equip":
+            self.world.apply_event(event)
+            msg = self.narrator.render(event)
+            if msg:
+                print(msg)
+        elif event.event_type == "unequip":
+            self.world.apply_event(event)
+            msg = self.narrator.render(event)
+            if msg:
+                print(msg)
         else:
             self.world.apply_event(event)
         # After applying and narrating, record perception for nearby actors

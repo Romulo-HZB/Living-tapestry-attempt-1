@@ -34,6 +34,7 @@ This document tracks the implementation status of the engine against the design 
   DAMAGE_APPLIED event chain with deterministic rules in `rpg/combat_rules.py`.
 - A `drop` tool lets actors place carried items in their current location.
 - A `stats` tool reports an actor's hit points, attributes and skills.
+- `equip` and `unequip` tools let actors manage equipment slots.
 
 ## Outstanding Tasks
 

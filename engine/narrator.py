@@ -80,4 +80,16 @@ class Narrator:
                 skill_str = ", ".join(f"{k} ({v})" for k, v in skills.items())
                 parts.append(f"Skills: {skill_str}")
             return f"{actor.name} stats - " + "; ".join(parts)
+        elif event.event_type == "equip":
+            actor = self.world.get_npc(event.actor_id)
+            item = self.world.get_item_instance(event.target_ids[0])
+            bp = self.world.get_item_blueprint(item.blueprint_id)
+            slot = event.payload.get("slot", "")
+            return f"{actor.name} equips {bp.name} to {slot}."
+        elif event.event_type == "unequip":
+            actor = self.world.get_npc(event.actor_id)
+            item = self.world.get_item_instance(event.target_ids[0])
+            bp = self.world.get_item_blueprint(item.blueprint_id)
+            slot = event.payload.get("slot", "")
+            return f"{actor.name} removes {bp.name} from {slot}."
         return ""

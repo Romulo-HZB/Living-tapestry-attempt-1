@@ -6,6 +6,8 @@ from .talk import TalkTool
 from .inventory import InventoryTool
 from .drop import DropTool
 from .stats import StatsTool
+from .equip import EquipTool
+from .unequip import UnequipTool
 
 __all__ = [
     "MoveTool",
@@ -16,4 +18,6 @@ __all__ = [
     "InventoryTool",
     "DropTool",
     "StatsTool",
+    "EquipTool",
+    "UnequipTool",
 ]

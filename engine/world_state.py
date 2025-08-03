@@ -129,3 +129,22 @@ class WorldState:
             npc = self.npcs.get(target_id)
             if npc:
                 npc.hp -= amount
+        elif event.event_type == "equip":
+            actor_id = event.actor_id
+            item_id = event.target_ids[0]
+            slot = event.payload.get("slot")
+            npc = self.npcs.get(actor_id)
+            if npc and slot in npc.slots and item_id in npc.inventory:
+                current = npc.slots.get(slot)
+                if current:
+                    npc.inventory.append(current)
+                npc.inventory.remove(item_id)
+                npc.slots[slot] = item_id
+        elif event.event_type == "unequip":
+            actor_id = event.actor_id
+            slot = event.payload.get("slot")
+            npc = self.npcs.get(actor_id)
+            if npc and slot in npc.slots and npc.slots.get(slot):
+                item_id = npc.slots[slot]
+                npc.inventory.append(item_id)
+                npc.slots[slot] = None
