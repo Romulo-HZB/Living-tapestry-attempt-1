@@ -7,5 +7,7 @@
   ],
   "sublocations": [],
   "transient_effects": [],
-  "connections_state": {}
+  "connections_state": {
+    "town_square": {"status": "closed"}
+  }
 }

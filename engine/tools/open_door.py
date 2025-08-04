@@ -6,9 +6,9 @@ from ..world_state import WorldState
 from ..data_models import NPC
 
 
-class MoveTool(Tool):
-    def __init__(self, time_cost: int = 5):
-        super().__init__(name="move", time_cost=time_cost)
+class OpenDoorTool(Tool):
+    def __init__(self, time_cost: int = 1):
+        super().__init__(name="open", time_cost=time_cost)
 
     def validate_intent(self, intent: Dict[str, Any], world: WorldState, actor: NPC) -> bool:
         target = intent.get("target_location")
@@ -22,12 +22,14 @@ class MoveTool(Tool):
             return False
         loc_state = world.get_location_state(current)
         conn = loc_state.connections_state.get(target, {})
-        return conn.get("status", "open") == "open"
+        return conn.get("status", "open") != "open"
 
     def generate_events(self, intent: Dict[str, Any], world: WorldState, actor: NPC, tick: int) -> List[Event]:
-        return [Event(
-            event_type="move",
-            tick=tick,
-            actor_id=actor.id,
-            target_ids=[intent["target_location"]],
-        )]
+        return [
+            Event(
+                event_type="open_connection",
+                tick=tick,
+                actor_id=actor.id,
+                target_ids=[intent["target_location"]],
+            )
+        ]

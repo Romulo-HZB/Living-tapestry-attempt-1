@@ -184,3 +184,15 @@ class WorldState:
                 inst = self.item_instances.get(item_id)
                 if inst:
                     inst.owner_id = target_id
+        elif event.event_type == "open_connection":
+            actor_loc = self.find_npc_location(event.actor_id)
+            target = event.target_ids[0]
+            if actor_loc:
+                self.locations_state[actor_loc].connections_state.setdefault(target, {})["status"] = "open"
+                self.locations_state[target].connections_state.setdefault(actor_loc, {})["status"] = "open"
+        elif event.event_type == "close_connection":
+            actor_loc = self.find_npc_location(event.actor_id)
+            target = event.target_ids[0]
+            if actor_loc:
+                self.locations_state[actor_loc].connections_state.setdefault(target, {})["status"] = "closed"
+                self.locations_state[target].connections_state.setdefault(actor_loc, {})["status"] = "closed"
