@@ -25,6 +25,8 @@ from engine.tools.unequip import UnequipTool
 from engine.tools.analyze import AnalyzeTool
 from engine.tools.eat import EatTool
 from engine.tools.give import GiveTool
+from engine.tools.open_door import OpenDoorTool
+from engine.tools.close_door import CloseDoorTool
 from engine.llm_client import LLMClient
 
 
@@ -32,7 +34,7 @@ SYSTEM_PROMPT = (
     "You are a command parser for a text game. "
     "Return a JSON object describing the player's intended action. "
     "Available tools: look, move(target_location), grab(item_id), drop(item_id), attack(target_id), "
-    "talk(content, target_id), talk_loud(content), scream(content), inventory(), stats(), equip(item_id, slot), unequip(slot), analyze(item_id), eat(item_id), give(item_id, target_id)."
+    "talk(content, target_id), talk_loud(content), scream(content), inventory(), stats(), equip(item_id, slot), unequip(slot), analyze(item_id), eat(item_id), give(item_id, target_id), open(target_location), close(target_location)."
 )
 
 
@@ -61,13 +63,15 @@ def main():
     sim.register_tool(AnalyzeTool())
     sim.register_tool(EatTool())
     sim.register_tool(GiveTool())
+    sim.register_tool(OpenDoorTool())
+    sim.register_tool(CloseDoorTool())
 
     actor_id = "npc_sample"  # temporary player actor
     if args.llm:
         llm = LLMClient(Path("config/llm.json"))
         print("Type text commands. Say 'quit' to exit.")
     else:
-        print("Type 'look', 'move <loc>', 'grab <item>', 'drop <item>', 'attack <npc>', 'talk <msg>' or 'talk <target> <msg>', 'shout <msg>', 'scream <msg>', 'inventory', 'stats', 'equip <item> <slot>', 'unequip <slot>', 'analyze <item>', 'eat <item>', 'give <item> <npc>', 'mem' to review memories, or 'quit'.")
+        print("Type 'look', 'move <loc>', 'grab <item>', 'drop <item>', 'attack <npc>', 'talk <msg>' or 'talk <target> <msg>', 'shout <msg>', 'scream <msg>', 'inventory', 'stats', 'equip <item> <slot>', 'unequip <slot>', 'analyze <item>', 'eat <item>', 'give <item> <npc>', 'open <loc>', 'close <loc>', 'mem' to review memories, or 'quit'.")
 
     while True:
         cmd = input("-> ").strip()
@@ -139,6 +143,12 @@ def main():
                 else:
                     print("Usage: give <item_id> <npc_id>")
                     continue
+            elif cmd.startswith("open "):
+                target = cmd.split(" ", 1)[1]
+                command = {"tool": "open", "params": {"target_location": target}}
+            elif cmd.startswith("close "):
+                target = cmd.split(" ", 1)[1]
+                command = {"tool": "close", "params": {"target_location": target}}
             elif cmd.startswith("equip "):
                 parts = cmd.split()
                 if len(parts) == 3:

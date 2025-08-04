@@ -42,6 +42,7 @@ This document tracks the implementation status of the engine against the design 
   - A basic hunger system tracks when actors last ate and updates their hunger stage each tick.
   - An `eat` tool allows consuming food items to reset hunger.
   - A `give` tool transfers items between actors occupying the same location.
+  - `open` and `close` tools toggle passage status between locations, and `move` respects closed connections.
 
 ## Outstanding Tasks
 

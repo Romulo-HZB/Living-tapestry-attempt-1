@@ -136,4 +136,12 @@ class Narrator:
             target = self.world.get_npc(event.target_ids[1])
             bp = self.world.get_item_blueprint(item.blueprint_id)
             return f"{actor.name} gives {bp.name} to {target.name}."
+        elif event.event_type == "open_connection":
+            actor = self.world.get_npc(event.actor_id)
+            loc = self.world.get_location_static(event.target_ids[0])
+            return f"{actor.name} opens the way to {loc.description}."
+        elif event.event_type == "close_connection":
+            actor = self.world.get_npc(event.actor_id)
+            loc = self.world.get_location_static(event.target_ids[0])
+            return f"{actor.name} closes the way to {loc.description}."
         return ""
