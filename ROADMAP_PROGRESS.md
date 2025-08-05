@@ -18,7 +18,7 @@ This document tracks the implementation status of the engine against the design 
   - `scripts/cli_game.py` implements an interactive command loop.
 
 - **Phase 3 – LLM Command Parser**
-  - `engine/llm_client.py` connects to an OpenAI-compatible endpoint.
+  - `engine/llm_client.py` connects to an OpenAI-compatible endpoint, including OpenRouter.
   - `scripts/cli_game.py` can use the LLM to parse free text when `--llm` is supplied.
 
 - **Phase 4 – Additional Tools**
