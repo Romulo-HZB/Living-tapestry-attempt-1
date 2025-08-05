@@ -47,7 +47,8 @@ def main():
     world.load()
 
     narrator = Narrator(world)
-    sim = Simulator(world, narrator=narrator)
+    actor_id = "npc_sample"  # temporary player actor
+    sim = Simulator(world, narrator=narrator, player_id=actor_id)
     sim.register_tool(MoveTool())
     sim.register_tool(LookTool())
     sim.register_tool(GrabTool())
@@ -65,8 +66,6 @@ def main():
     sim.register_tool(GiveTool())
     sim.register_tool(OpenDoorTool())
     sim.register_tool(CloseDoorTool())
-
-    actor_id = "npc_sample"  # temporary player actor
     if args.llm:
         llm = LLMClient(Path("config/llm.json"))
         print("Type text commands. Say 'quit' to exit.")

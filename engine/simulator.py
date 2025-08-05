@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from typing import Dict, Any, List, Optional
+import random
 
 from .world_state import WorldState
 from .events import Event
@@ -11,12 +12,18 @@ from rpg import combat_rules
 
 
 class Simulator:
-    def __init__(self, world: WorldState, narrator: Optional[Narrator] = None):
+    def __init__(
+        self,
+        world: WorldState,
+        narrator: Optional[Narrator] = None,
+        player_id: Optional[str] = None,
+    ):
         self.world = world
         self.game_tick = 0
         self.event_queue: List[Event] = []
         self.tools: Dict[str, Tool] = {}
         self.narrator = narrator or Narrator(world)
+        self.player_id = player_id
 
     def register_tool(self, tool: Tool):
         self.tools[tool.name] = tool
@@ -34,9 +41,35 @@ class Simulator:
         self.event_queue.extend(events)
         actor.next_available_tick = self.game_tick + tool.time_cost
 
+    def npc_think(self, npc: NPC) -> Optional[Dict[str, Any]]:
+        """Produce a simple command for a non-player actor."""
+        current_loc = self.world.find_npc_location(npc.id)
+        if not current_loc:
+            return None
+        loc_static = self.world.get_location_static(current_loc)
+        loc_state = self.world.get_location_state(current_loc)
+        options = []
+        for neighbor_id in loc_static.hex_connections.values():
+            conn = loc_state.connections_state.get(neighbor_id, {})
+            if conn.get("status", "open") == "open":
+                options.append(neighbor_id)
+        if options:
+            target = random.choice(options)
+            return {"tool": "move", "params": {"target_location": target}}
+        if random.random() < 0.3:
+            return {"tool": "talk", "params": {"content": "looks around."}}
+        return None
+
     def tick(self):
         self.game_tick += 1
         self.world.update_hunger(self.game_tick)
+        for npc_id, npc in self.world.npcs.items():
+            if npc_id == self.player_id:
+                continue
+            if npc.next_available_tick <= self.game_tick:
+                command = self.npc_think(npc)
+                if command:
+                    self.process_command(npc_id, command)
         ready_events = [e for e in self.event_queue if e.tick <= self.game_tick]
         self.event_queue = [e for e in self.event_queue if e.tick > self.game_tick]
         for event in ready_events:
