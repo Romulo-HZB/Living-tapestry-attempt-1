@@ -229,6 +229,10 @@ class Simulator:
             msg = self.narrator.render(event)
             if msg:
                 print(msg)
+        elif event.event_type == "wait":
+            msg = self.narrator.render(event)
+            if msg:
+                print(msg)
         else:
             self.world.apply_event(event)
         # After applying and narrating, record perception for nearby actors
@@ -236,7 +240,7 @@ class Simulator:
 
     def record_perception(self, event: Event):
         """Add a simplified perception entry to actors in the same location."""
-        if event.event_type == "describe_location":
+        if event.event_type in {"describe_location", "wait"}:
             return
 
         if event.event_type == "move":

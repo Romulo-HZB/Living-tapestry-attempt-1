@@ -44,6 +44,7 @@ This document tracks the implementation status of the engine against the design 
   - A `give` tool transfers items between actors occupying the same location.
   - `open` and `close` tools toggle passage status between locations, and `move` respects closed connections.
   - A simple NPC think cycle lets non-player actors wander or comment when idle.
+  - A `wait` tool lets actors deliberately pass time without acting.
 
 ## Outstanding Tasks
 
