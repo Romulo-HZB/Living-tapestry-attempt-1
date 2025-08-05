@@ -24,6 +24,7 @@ class Simulator:
         self.tools: Dict[str, Tool] = {}
         self.narrator = narrator or Narrator(world)
         self.player_id = player_id
+        self.starvation_enabled = True
 
     def register_tool(self, tool: Tool):
         self.tools[tool.name] = tool
@@ -62,8 +63,9 @@ class Simulator:
 
     def tick(self):
         self.game_tick += 1
-        hunger_events = self.world.update_hunger(self.game_tick)
-        self.event_queue.extend(hunger_events)
+        if self.starvation_enabled:
+            hunger_events = self.world.update_hunger(self.game_tick)
+            self.event_queue.extend(hunger_events)
         for npc_id, npc in self.world.npcs.items():
             if npc_id == self.player_id:
                 continue
@@ -194,6 +196,15 @@ class Simulator:
                 print(msg)
         elif event.event_type == "give":
             self.world.apply_event(event)
+            msg = self.narrator.render(event)
+            if msg:
+                print(msg)
+        elif event.event_type == "toggle_starvation":
+            self.starvation_enabled = event.payload.get("enabled", True)
+            if not self.starvation_enabled:
+                for npc in self.world.npcs.values():
+                    npc.hunger_stage = "sated"
+                    npc.last_meal_tick = self.game_tick
             msg = self.narrator.render(event)
             if msg:
                 print(msg)

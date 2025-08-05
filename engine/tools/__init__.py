@@ -13,6 +13,7 @@ from .unequip import UnequipTool
 from .analyze import AnalyzeTool
 from .eat import EatTool
 from .give import GiveTool
+from .toggle_starvation import ToggleStarvationTool
 
 __all__ = [
     "MoveTool",
@@ -30,4 +31,5 @@ __all__ = [
     "AnalyzeTool",
     "EatTool",
     "GiveTool",
+    "ToggleStarvationTool",
 ]
