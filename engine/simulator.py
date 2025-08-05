@@ -62,7 +62,8 @@ class Simulator:
 
     def tick(self):
         self.game_tick += 1
-        self.world.update_hunger(self.game_tick)
+        hunger_events = self.world.update_hunger(self.game_tick)
+        self.event_queue.extend(hunger_events)
         for npc_id, npc in self.world.npcs.items():
             if npc_id == self.player_id:
                 continue
