@@ -8,24 +8,31 @@ from engine.tools.move import MoveTool
 from engine.tools.look import LookTool
 from engine.tools.grab import GrabTool
 from engine.tools.drop import DropTool
+from engine.tools.open_door import OpenDoorTool
+from engine.tools.attack import AttackTool
 
 
 def main():
     world = WorldState(Path("data"))
     world.load()
     narrator = Narrator(world)
-    sim = Simulator(world, narrator=narrator)
+    sim = Simulator(world, narrator=narrator, player_id="npc_sample")
     sim.register_tool(MoveTool())
     sim.register_tool(LookTool())
     sim.register_tool(GrabTool())
     sim.register_tool(DropTool())
+    sim.register_tool(OpenDoorTool())
+    sim.register_tool(AttackTool())
 
     print("Initial location occupants:")
     for loc_id, loc in world.locations_state.items():
         print(loc_id, loc.occupants)
 
-    command = {"tool": "move", "params": {"target_location": "market_square"}}
-    sim.process_command("npc_sample", command)
+    open_cmd = {"tool": "open", "params": {"target_location": "market_square"}}
+    sim.process_command("npc_sample", open_cmd)
+    sim.tick()
+    move_cmd = {"tool": "move", "params": {"target_location": "market_square"}}
+    sim.process_command("npc_sample", move_cmd)
     for _ in range(6):
         sim.tick()
 
