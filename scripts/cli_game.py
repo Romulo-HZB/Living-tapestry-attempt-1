@@ -29,6 +29,7 @@ from engine.tools.open_door import OpenDoorTool
 from engine.tools.close_door import CloseDoorTool
 from engine.tools.toggle_starvation import ToggleStarvationTool
 from engine.tools.wait import WaitTool
+from engine.tools.rest import RestTool
 from engine.llm_client import LLMClient
 
 
@@ -37,7 +38,7 @@ SYSTEM_PROMPT = (
     "Return a JSON object describing the player's intended action. "
     "Available tools: look, move(target_location), grab(item_id), drop(item_id), attack(target_id), "
     "talk(content, target_id), talk_loud(content), scream(content), inventory(), stats(), equip(item_id, slot), unequip(slot), analyze(item_id), eat(item_id), give(item_id, target_id), open(target_location), close(target_location), toggle_starvation(enabled)."
-    " wait(ticks)."
+    " wait(ticks), rest(ticks)."
 )
 
 
@@ -71,12 +72,13 @@ def main():
     sim.register_tool(CloseDoorTool())
     sim.register_tool(ToggleStarvationTool())
     sim.register_tool(WaitTool())
+    sim.register_tool(RestTool())
     if args.llm:
         llm = LLMClient(Path("config/llm.json"))
         print("Type text commands. Say 'quit' to exit.")
     else:
         print("Type 'look', 'move <loc>', 'grab <item>', 'drop <item>', 'attack <npc>', 'talk <msg>' or 'talk <target> <msg>', 'shout <msg>', 'scream <msg>', 'inventory', 'stats', 'equip <item> <slot>', 'unequip <slot>', 'analyze <item>', 'eat <item>', 'give <item> <npc>', 'open <loc>', 'close <loc>', 'starvation <on/off>', 'mem' to review memories, or 'quit'.")
-        print("Use 'wait [ticks]' to pass time without acting.")
+        print("Use 'wait [ticks]' to pass time or 'rest [ticks]' to recover HP.")
 
     while True:
         cmd = input("-> ").strip()
@@ -187,6 +189,15 @@ def main():
                     print("Usage: wait [ticks]")
                     continue
                 command = {"tool": "wait", "params": {"ticks": ticks}}
+            elif cmd.startswith("rest"):
+                parts = cmd.split()
+                ticks = 1
+                if len(parts) == 2 and parts[1].isdigit():
+                    ticks = int(parts[1])
+                elif len(parts) > 2 or (len(parts) == 2 and not parts[1].isdigit()):
+                    print("Usage: rest [ticks]")
+                    continue
+                command = {"tool": "rest", "params": {"ticks": ticks}}
             elif cmd == "mem":
                 npc = world.get_npc(actor_id)
                 for mem in npc.short_term_memory:

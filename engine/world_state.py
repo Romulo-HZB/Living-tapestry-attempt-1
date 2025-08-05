@@ -168,6 +168,13 @@ class WorldState:
             npc = self.npcs.get(target_id)
             if npc:
                 npc.hp = max(npc.hp - amount, 0)
+        elif event.event_type == "rest":
+            actor_id = event.actor_id
+            healed = event.payload.get("healed", 0)
+            npc = self.npcs.get(actor_id)
+            if npc:
+                max_hp = npc.attributes.get("constitution", npc.hp)
+                npc.hp = min(npc.hp + healed, max_hp)
         elif event.event_type == "equip":
             actor_id = event.actor_id
             item_id = event.target_ids[0]

@@ -45,6 +45,7 @@ This document tracks the implementation status of the engine against the design 
   - `open` and `close` tools toggle passage status between locations, and `move` respects closed connections.
   - A simple NPC think cycle lets non-player actors wander or comment when idle.
   - A `wait` tool lets actors deliberately pass time without acting.
+  - A `rest` tool lets actors recover hit points over time.
 
 ## Outstanding Tasks
 

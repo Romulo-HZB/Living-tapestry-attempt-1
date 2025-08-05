@@ -156,4 +156,11 @@ class Narrator:
             if ticks == 1:
                 return f"{actor.name} waits."
             return f"{actor.name} waits for {ticks} ticks."
+        elif event.event_type == "rest":
+            actor = self.world.get_npc(event.actor_id)
+            ticks = event.payload.get("ticks", 1)
+            healed = event.payload.get("healed", 0)
+            if ticks == 1:
+                return f"{actor.name} rests and recovers {healed} HP."
+            return f"{actor.name} rests for {ticks} ticks and recovers {healed} HP."
         return ""
