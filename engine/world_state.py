@@ -103,6 +103,8 @@ class WorldState:
         STARVING_THRESHOLD = 40
         events: list[Event] = []
         for npc in self.npcs.values():
+            if "dead" in npc.tags.get("dynamic", []):
+                continue
             ticks_since = current_tick - npc.last_meal_tick
             if ticks_since >= STARVING_THRESHOLD:
                 npc.hunger_stage = "starving"
@@ -165,7 +167,7 @@ class WorldState:
             amount = event.payload.get("amount", 0)
             npc = self.npcs.get(target_id)
             if npc:
-                npc.hp -= amount
+                npc.hp = max(npc.hp - amount, 0)
         elif event.event_type == "equip":
             actor_id = event.actor_id
             item_id = event.target_ids[0]
@@ -208,3 +210,26 @@ class WorldState:
             if actor_loc:
                 self.locations_state[actor_loc].connections_state.setdefault(target, {})["status"] = "closed"
                 self.locations_state[target].connections_state.setdefault(actor_loc, {})["status"] = "closed"
+        elif event.event_type == "npc_died":
+            npc = self.npcs.get(event.actor_id)
+            if not npc:
+                return
+            loc_id = self.find_npc_location(npc.id)
+            if loc_id and npc.id in self.locations_state[loc_id].occupants:
+                self.locations_state[loc_id].occupants.remove(npc.id)
+                # Drop inventory and equipped items
+                all_items = list(npc.inventory)
+                for slot, item_id in npc.slots.items():
+                    if item_id:
+                        all_items.append(item_id)
+                        npc.slots[slot] = None
+                for item_id in all_items:
+                    self.locations_state[loc_id].items.append(item_id)
+                    inst = self.item_instances.get(item_id)
+                    if inst:
+                        inst.owner_id = None
+                        inst.current_location = loc_id
+                npc.inventory.clear()
+            # Mark as dead
+            if "dead" not in npc.tags.get("dynamic", []):
+                npc.tags.setdefault("dynamic", []).append("dead")
