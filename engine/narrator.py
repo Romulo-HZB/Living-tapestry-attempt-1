@@ -150,4 +150,10 @@ class Narrator:
         elif event.event_type == "npc_died":
             actor = self.world.get_npc(event.actor_id)
             return f"{actor.name} dies."
+        elif event.event_type == "wait":
+            actor = self.world.get_npc(event.actor_id)
+            ticks = event.payload.get("ticks", 1)
+            if ticks == 1:
+                return f"{actor.name} waits."
+            return f"{actor.name} waits for {ticks} ticks."
         return ""
