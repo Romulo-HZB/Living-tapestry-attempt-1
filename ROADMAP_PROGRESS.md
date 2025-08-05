@@ -43,10 +43,11 @@ This document tracks the implementation status of the engine against the design 
   - An `eat` tool allows consuming food items to reset hunger.
   - A `give` tool transfers items between actors occupying the same location.
   - `open` and `close` tools toggle passage status between locations, and `move` respects closed connections.
+  - A simple NPC think cycle lets non-player actors wander or comment when idle.
 
 ## Outstanding Tasks
 
 - Expand the toolset and improve combat handling (Phase 4).
-- Implement NPC AI with memory and conversation systems (Phase 5).
+- Develop NPC AI with memory and conversation systems (Phase 5).
 - Build polish features such as the narrator, fallback system and tag rules.
 
