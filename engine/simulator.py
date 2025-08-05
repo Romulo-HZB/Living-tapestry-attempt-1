@@ -67,7 +67,7 @@ class Simulator:
             hunger_events = self.world.update_hunger(self.game_tick)
             self.event_queue.extend(hunger_events)
         for npc_id, npc in self.world.npcs.items():
-            if npc_id == self.player_id:
+            if npc_id == self.player_id or "dead" in npc.tags.get("dynamic", []):
                 continue
             if npc.next_available_tick <= self.game_tick:
                 command = self.npc_think(npc)
@@ -160,6 +160,17 @@ class Simulator:
             msg = self.narrator.render(event)
             if msg:
                 print(msg)
+            target = self.world.get_npc(event.target_ids[0])
+            if target.hp <= 0 and "dead" not in target.tags.get("dynamic", []):
+                loc_id = self.world.find_npc_location(target.id)
+                self.event_queue.append(
+                    Event(
+                        event_type="npc_died",
+                        tick=self.game_tick,
+                        actor_id=target.id,
+                        target_ids=[loc_id] if loc_id else [],
+                    )
+                )
         elif event.event_type == "talk":
             msg = self.narrator.render(event)
             if msg:
@@ -213,6 +224,11 @@ class Simulator:
             msg = self.narrator.render(event)
             if msg:
                 print(msg)
+        elif event.event_type == "npc_died":
+            self.world.apply_event(event)
+            msg = self.narrator.render(event)
+            if msg:
+                print(msg)
         else:
             self.world.apply_event(event)
         # After applying and narrating, record perception for nearby actors
@@ -225,6 +241,8 @@ class Simulator:
 
         if event.event_type == "move":
             location_id = event.target_ids[0]
+        elif event.event_type == "npc_died":
+            location_id = event.target_ids[0] if event.target_ids else None
         else:
             location_id = self.world.find_npc_location(event.actor_id)
 

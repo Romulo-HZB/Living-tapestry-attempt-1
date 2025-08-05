@@ -147,4 +147,7 @@ class Narrator:
             actor = self.world.get_npc(event.actor_id)
             loc = self.world.get_location_static(event.target_ids[0])
             return f"{actor.name} closes the way to {loc.description}."
+        elif event.event_type == "npc_died":
+            actor = self.world.get_npc(event.actor_id)
+            return f"{actor.name} dies."
         return ""
