@@ -5,7 +5,7 @@ Terminal‑only, text‑based life‑simulation engine powered by a single local
 Scope = pure **simulation** (no action‑points). Target hardware = one GPU, one quantised LLM instance. Longer think‑times are acceptable in exchange for narrative richness.
 2. Core Technology Stack
 **Python 3.x** – event loop, mechanics, utilities.
-**LM Studio‑hosted LLM** – OpenAI‑compatible local endpoint.
+**LM Studio‑hosted LLM** – OpenAI‑compatible local endpoint. The game will also support an OpenRouter connection.
 **JSON files** – human‑readable storage for all entities and configs.
 **Optional curses / hex visualiser** – future board view.
 **python‑docx / Markdown** – documentation pipeline.
@@ -34,7 +34,7 @@ Prototype vs instance pattern.
 3.4 Player Sheet  (player/player.json)
 Schema mirrors NPC, stored separately for easy edits.
 3.5 LLM Config  (config/llm.json)
-`model`, `endpoint`, `max_context` (−1 = inherit LM Studio).
+`model`, `endpoint`, `max_context` (−1 = inherit LM Studio). The endpoint may point to LM Studio or an OpenRouter connection.
 4. Simulation Engine Workflow
 Turn loop with event queue: Player → NPCs → Event Processing → Tick Advance.
 4.1 Tool Catalogue
