@@ -9,6 +9,7 @@ from .data_models import (
     ItemBlueprint,
     ItemInstance,
 )
+from .events import Event
 
 
 class WorldState:
@@ -97,17 +98,28 @@ class WorldState:
                 return loc_id
         return None
 
-    def update_hunger(self, current_tick: int):
+    def update_hunger(self, current_tick: int) -> list[Event]:
         HUNGRY_THRESHOLD = 20
         STARVING_THRESHOLD = 40
+        events: list[Event] = []
         for npc in self.npcs.values():
             ticks_since = current_tick - npc.last_meal_tick
             if ticks_since >= STARVING_THRESHOLD:
                 npc.hunger_stage = "starving"
+                events.append(
+                    Event(
+                        event_type="damage_applied",
+                        tick=current_tick,
+                        actor_id=npc.id,
+                        target_ids=[npc.id],
+                        payload={"amount": 1, "damage_type": "starvation"},
+                    )
+                )
             elif ticks_since >= HUNGRY_THRESHOLD:
                 npc.hunger_stage = "hungry"
             else:
                 npc.hunger_stage = "sated"
+        return events
 
     def apply_event(self, event):
         if event.event_type == "move":
