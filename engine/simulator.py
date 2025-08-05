@@ -49,6 +49,18 @@ class Simulator:
             return None
         loc_static = self.world.get_location_static(current_loc)
         loc_state = self.world.get_location_state(current_loc)
+
+        # Prefer attacking any other occupants in the same location
+        potential_targets = [
+            other_id
+            for other_id in loc_state.occupants
+            if other_id != npc.id
+            and "dead" not in self.world.get_npc(other_id).tags.get("dynamic", [])
+        ]
+        if potential_targets and random.random() < 0.5:
+            target = random.choice(potential_targets)
+            return {"tool": "attack", "params": {"target_id": target}}
+
         options = []
         for neighbor_id in loc_static.hex_connections.values():
             conn = loc_state.connections_state.get(neighbor_id, {})
