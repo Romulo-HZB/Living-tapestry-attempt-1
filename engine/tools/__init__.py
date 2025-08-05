@@ -15,6 +15,7 @@ from .eat import EatTool
 from .give import GiveTool
 from .toggle_starvation import ToggleStarvationTool
 from .wait import WaitTool
+from .rest import RestTool
 
 __all__ = [
     "MoveTool",
@@ -34,4 +35,5 @@ __all__ = [
     "GiveTool",
     "ToggleStarvationTool",
     "WaitTool",
+    "RestTool",
 ]
